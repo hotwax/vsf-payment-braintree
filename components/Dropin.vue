@@ -51,6 +51,10 @@ export default {
                     // Submit payload.nonce to your server
                     self.nonce = payload.nonce
                     console.error('success')
+                    // when payment made through 'paypal through braintree' update payment method to 'braintree_paypal'
+                    if(payload.type === "PayPalAccount"){
+                      self.$store.state.checkout.paymentDetails.paymentMethod="braintree_paypal"
+                    }
                     self.$bus.$emit('checkout-do-placeOrder', {
                       payment_method_nonce: self.nonce
                     })
@@ -73,10 +77,10 @@ export default {
       })
     },
     getTransactions () {
-      return {amount: {total: this.grandTotal, currency: this.currency}}
+      return { amount: { total: this.grandTotal, currency: this.currency } }
     },
     getNonce () {
-      return {nonce: this.nonce, total: this.grandTotal, currency: this.currency}
+      return { nonce: this.nonce, total: this.grandTotal, currency: this.currency }
     },
     doPayment (data, actions) {
       return this.$store.dispatch('braintree/doPayment', this.getNonce())
