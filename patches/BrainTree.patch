@@ -1,0 +1,36 @@
+diff --git src/themes/notnaked/components/organisms/o-confirm-order.vue src/themes/notnaked/components/organisms/o-confirm-order.vue
+index ade79c37..6fc057af 100644
+--- src/themes/notnaked/components/organisms/o-confirm-order.vue
++++ src/themes/notnaked/components/organisms/o-confirm-order.vue
+@@ -279,9 +279,12 @@
+       </div>
+       <MPriceSummary class="totals__element" />
+     </div>
++    <div class="payment">
++      <braintree-dropin v-if="paymentMethod === 'Braintree'"/>
++    </div>
+     <div class="actions">
+       <SfButton
+-        class="sf-button--full-width actions__button"
++        class="sf-button--full-width actions__button place-order-btn"
+         :disabled="$v.orderReview.$invalid || !productsInCart.length"
+         @click="placeOrder"
+       >
+@@ -319,6 +322,7 @@ import MPriceSummary from 'theme/components/molecules/m-price-summary';
+ import APromoCode from 'theme/components/atoms/a-promo-code';
+ import { ModalList } from 'theme/store/ui/modals'
+ import { createSmoothscroll } from 'theme/helpers';
++import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin'
+ 
+ export default {
+   name: 'OConfirmOrder',
+@@ -334,7 +338,8 @@ export default {
+     SfCharacteristic,
+     SfCollectedProduct,
+     APromoCode,
+-    MPriceSummary
++    MPriceSummary,
++    BraintreeDropin
+   },
+   mixins: [OrderReview],
+   data () {
