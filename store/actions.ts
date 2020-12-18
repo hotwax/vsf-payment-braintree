@@ -8,7 +8,6 @@ import { adjustMultistoreApiUrl } from '@vue-storefront/core/lib/multistore'
 export const actions: ActionTree<BraintreeState, any> = {
   generateToken () {
     let url = config.braintree.endpoint + '/get-token'
-    console.log(url)
     return fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -18,7 +17,9 @@ export const actions: ActionTree<BraintreeState, any> = {
       }
     }).then(resp => { return resp.json() })
       .then((resp) => {
-        console.debug(resp.result.token)
+        if (resp.token) {
+          return resp.token
+        }
         return resp.result.token
       })
   },

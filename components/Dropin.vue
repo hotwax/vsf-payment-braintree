@@ -4,6 +4,8 @@
 
 <script>
 import { currentStoreView } from '@vue-storefront/core/lib/multistore'
+import { registerModule } from '@vue-storefront/core/lib/modules';
+import { Braintree } from '..';
 
 export default {
   name: 'BraintreeDropin',
@@ -16,6 +18,9 @@ export default {
       currency: storeView.i18n.currencyCode,
       locale: storeView.i18n.defaultLocale.replace('-', '_') // Convert to PayPal format of locale
     }
+  },
+  created () {
+    registerModule(Braintree)
   },
   mounted () {
     this.configureBraintree()
@@ -52,8 +57,8 @@ export default {
                     self.nonce = payload.nonce
                     console.error('success')
                     // when payment made through 'paypal through braintree' update payment method to 'braintree_paypal'
-                    if(payload.type === "PayPalAccount"){
-                      self.$store.state.checkout.paymentDetails.paymentMethod="braintree_paypal"
+                    if (payload.type === 'PayPalAccount') {
+                      self.$store.state.checkout.paymentDetails.paymentMethod = 'braintree_paypal'
                     }
                     self.$bus.$emit('checkout-do-placeOrder', {
                       payment_method_nonce: self.nonce
