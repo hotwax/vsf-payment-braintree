@@ -22,13 +22,6 @@ export const Braintree: StorefrontModule = function ({ app, store }) {
       store.watch((state) => state.checkout.paymentDetails, (prevMethodCode, newMethodCode) => {
         isCurrentPaymentMethod = newMethodCode.paymentMethod === CURRENT_METHOD_CODE
       })
-
-      const invokePlaceOrder = () => {
-        if (isCurrentPaymentMethod) {
-          app.$emit('checkout-do-placeOrder', {})
-        }
-      }
-      app.$on('checkout-before-placeOrder', invokePlaceOrder)
     }
   })
 }

@@ -19,9 +19,9 @@ export default {
       locale: storeView.i18n.defaultLocale.replace('-', '_') // Convert to PayPal format of locale
     }
   },
-  created () {
-    registerModule(Braintree)
-  },
+  // created () {
+  //   registerModule(Braintree)
+  // },
   mounted () {
     this.configureBraintree()
   },
@@ -46,39 +46,30 @@ export default {
             amount: this.getTransactions().amount.total,
             currency: this.getTransactions().amount.currency
           }
-        }).then((dropinInstance) => {
+        }, (err, dropinInstance) => {
+          if (err) {
+            console.error(err)
+            return;
+          }
           button.addEventListener('click', () => {
-            if (dropinInstance.isPaymentMethodRequestable()) {
-              setTimeout(() => {
-                dropinInstance.requestPaymentMethod((err, payload) => {
-                  if (!err) {
-                    console.debug(payload)
-                    // Submit payload.nonce to your server
-                    self.nonce = payload.nonce
-                    console.error('success')
-                    // when payment made through 'paypal through braintree' update payment method to 'braintree_paypal'
-                    if (payload.type === 'PayPalAccount') {
-                      self.$store.state.checkout.paymentDetails.paymentMethod = 'braintree_paypal'
-                    }
-                    self.$bus.$emit('checkout-do-placeOrder', {
-                      payment_method_nonce: self.nonce
-                    })
-                  } else {
-                    console.error(err)
-                  }
-                }).catch((requestPaymentMethodErr) => {
-                  // No payment method is available.
-                  // An appropriate error will be shown in the UI.
-                  console.error(requestPaymentMethodErr)
-                })
-              }, 400)
-            }
+            dropinInstance.requestPaymentMethod((err, payload) => {
+              if (!err) {
+                console.debug(payload)
+                // Submit payload.nonce to your server
+                self.nonce = payload.nonce
+                console.error('success')
+                // when payment made through 'paypal through braintree' update payment method to 'braintree_paypal'
+                if (payload.type === 'PayPalAccount') {
+                  self.$store.state.checkout.paymentDetails.paymentMethod = 'braintree_paypal'
+                } else if (payload.type === 'CreditCard') {
+                  self.$store.state.checkout.paymentDetails.paymentMethod = 'braintreecreditcard'
+                }
+              } else {
+                console.error(err)
+              }
+            })
           })
-        }).catch((error) => {
-          console.error(error)
         })
-      }).catch((error) => {
-        console.error(error)
       })
     },
     getTransactions () {
