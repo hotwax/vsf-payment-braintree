@@ -17,12 +17,6 @@ export default {
       locale: storeView.i18n.defaultLocale.replace('-', '_') // Convert to PayPal format of locale
     }
   },
-<<<<<<< HEAD
-=======
-  // created () {
-  //   registerModule(Braintree)
-  // },
->>>>>>> e0314a129c4bb47ac7c2c3802bfb8f4b5d7797ef
   mounted () {
     this.configureBraintree()
   },
@@ -52,12 +46,9 @@ export default {
             console.error(err)
             return;
           }
-<<<<<<< HEAD
           dropinInstance.on('paymentOptionSelected', function(event) {
             button.removeAttribute('disabled')
           })
-=======
->>>>>>> e0314a129c4bb47ac7c2c3802bfb8f4b5d7797ef
           button.addEventListener('click', () => {
             dropinInstance.requestPaymentMethod((err, payload) => {
               if (!err) {
@@ -68,16 +59,10 @@ export default {
                 // when payment made through 'paypal through braintree' update payment method to 'braintree_paypal'
                 if (payload.type === 'PayPalAccount') {
                   self.$store.state.checkout.paymentDetails.paymentMethod = 'braintree_paypal'
-<<<<<<< HEAD
                 } else {
                   self.$store.state.checkout.paymentDetails.paymentMethod = 'braintree'
                 }
                 this.$emit('sendDataToCheckout')
-=======
-                } else if (payload.type === 'CreditCard') {
-                  self.$store.state.checkout.paymentDetails.paymentMethod = 'braintreecreditcard'
-                }
->>>>>>> e0314a129c4bb47ac7c2c3802bfb8f4b5d7797ef
               } else {
                 console.error(err)
               }
