@@ -46,9 +46,6 @@ export default {
             console.error(err)
             return;
           }
-          dropinInstance.on('paymentOptionSelected', function(event) {
-            button.removeAttribute('disabled')
-          })
           button.addEventListener('click', () => {
             dropinInstance.requestPaymentMethod((err, payload) => {
               if (!err) {
@@ -62,12 +59,25 @@ export default {
                 } else {
                   self.$store.state.checkout.paymentDetails.paymentMethod = 'braintree'
                 }
-                this.$emit('sendDataToCheckout')
+                setTimeout(() => {
+                  this.$emit('sendDataToCheckout')
+                }, 1000)
               } else {
                 console.error(err)
               }
             })
           })
+          if (dropinInstance.isPaymentMethodRequestable()) {
+            button.removeAttribute('disabled');
+          }
+
+          dropinInstance.on('paymentMethodRequestable', function (event) {
+            button.removeAttribute('disabled');
+          });
+
+          dropinInstance.on('noPaymentMethodRequestable', function () {
+            button.setAttribute('disabled', true);
+          });
         })
       })
     },
