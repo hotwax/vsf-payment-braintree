@@ -3,11 +3,12 @@ import { ActionTree } from 'vuex';
 import * as types from './mutation-types'
 import config from 'config'
 import { adjustMultistoreApiUrl } from '@vue-storefront/core/lib/multistore'
+import { processURLAddress } from '@vue-storefront/core/helpers';
 
 // it's a good practice for all actions to return Promises with effect of their execution
 export const actions: ActionTree<BraintreeState, any> = {
   generateToken () {
-    let url = config.braintree.endpoint + '/get-token'
+    let url = processURLAddress(config.braintree.endpoint + '/get-token')
     return fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -24,7 +25,7 @@ export const actions: ActionTree<BraintreeState, any> = {
       })
   },
   doPayment (params) {
-    let url = config.braintree.endpoint + '/do-payment'
+    let url = processURLAddress(config.braintree.endpoint + '/do-payment')
     console.log(url)
     console.log(params)
     return fetch(url, {
