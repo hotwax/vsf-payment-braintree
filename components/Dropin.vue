@@ -40,7 +40,8 @@ export default {
             flow: 'checkout',
             amount: this.getTransactions().amount.total,
             currency: this.getTransactions().amount.currency
-          }
+          },
+          locale: currentStoreView().i18n.defaultLocale.replace('-', '_')
         }, (err, dropinInstance) => {
           if (err) {
             console.error(err)
