@@ -45,7 +45,8 @@ export default {
             flow: 'checkout',
             amount: this.getTransactions().amount.total,
             currency: this.getTransactions().amount.currency
-          }
+          },
+          locale: currentStoreView().i18n.defaultLocale.replace('-', '_')
         }).then((dropinInstance) => {
           button.addEventListener('click', () => {
             if (dropinInstance.isPaymentMethodRequestable()) {
